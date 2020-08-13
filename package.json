@@ -52,7 +52,7 @@
     "chalk": "^4.1.0",
     "glob": "^7.1.6",
     "jsonlint": "^1.6.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "marked": "^1.1.0",
     "mkdirp": "^1.0.4",
     "multiline-ts": "^2.0.0",
