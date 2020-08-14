@@ -1,0 +1,84 @@
+{
+  "name": "test-snippets",
+  "version": "0.1.0",
+  "description": "Flexibly test markdown code examples",
+  "main": "./build/wrapper.js",
+  "exports": {
+    "import": "./build/es6/index.mjs",
+    "require": "./build/wrapper.js"
+  },
+  "bin": {
+    "test-snippets": "./build/es5/command.cjs"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:peterjwest/test-snippets.git"
+  },
+  "files": [
+    "/build"
+  ],
+  "author": "Peter West",
+  "bugs": {
+    "url": "https://github.com/peterjwest/test-snippets/issues"
+  },
+  "keywords": [
+    "markdown",
+    "test",
+    "unit",
+    "example",
+    "documentation",
+    "docs"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/peterjwest/test-snippets#readme",
+  "scripts": {
+    "audit-dependencies": "yarn audit; [[ $? -ge 4 ]] && exit 1 || exit 0",
+    "build": "yarn build:es6 && yarn build:es5",
+    "build:es6": "rm -rf build/es6 && tsc --project tsconfig-build-es6.json && npx convert-extension mjs build/es6",
+    "build:es5": "rm -rf build/es5 && tsc --project tsconfig-build-es5.json && npx convert-extension cjs build/es5",
+    "lint:ts": "tslint --format verbose --project tsconfig.json",
+    "test:coverage": "rm -rf coverage && NODE_DEBUG=nyc nyc mocha 'tests/*.ts'",
+    "test:unit": "mocha --require ts-node/register 'tests/*.ts'",
+    "test:unit:es5": "mocha 'tests/*.cjs'",
+    "test:unit:es6": "mocha 'tests/*.mjs'",
+    "test:snippets": "ts-node src/command.ts"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "chalk": "^4.1.0",
+    "glob": "^7.1.6",
+    "jsonlint": "^1.6.3",
+    "lodash": "^4.17.15",
+    "marked": "^1.1.0",
+    "mkdirp": "^1.0.4",
+    "multiline-ts": "^2.0.0",
+    "spawn-process": "^1.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/types": "^7.10.4",
+    "@types/babel__core": "^7.1.9",
+    "@types/bluebird": "^3.5.32",
+    "@types/glob": "^7.1.2",
+    "@types/lodash": "^4.14.155",
+    "@types/marked": "^0.7.4",
+    "@types/mkdirp": "^1.0.1",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.13",
+    "@types/sinon": "^9.0.4",
+    "convert-extension": "^0.2.0",
+    "mocha": "^8.0.1",
+    "nyc": "^15.1.0",
+    "sinon-assert-stub": "^1.0.1",
+    "sinon-mocha-test": "^1.0.8",
+    "ts-node": "^8.4.1",
+    "tslint": "^6.1.2",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.9.5",
+    "typescript-tslint-plugin": "^0.5.4"
+  }
+}
