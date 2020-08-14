@@ -29,7 +29,7 @@ Take this config file for example:
 }
 ```
 
-This allows you to tag snippets with "es6", "js" or "ts" in your markdown. Add an HTML comment directly above a code block, using any tags you wish to run it with (separated by slashes):
+This allows you to tag snippets with "es6", "js" or "ts" in your markdown. Add an HTML comment directly above a code block, using any tags you wish to run it with (separated by commas):
 
 ```md
     <!-- snippet: es6,ts -->
