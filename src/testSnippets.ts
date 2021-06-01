@@ -91,7 +91,7 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
       await dependencies.mkdirp(path.dirname(testPath));
       await dependencies.writeFile(testPath, snippet.text);
 
-      await new Promise<string>((resolve) => {
+      await new Promise<string | undefined>((resolve) => {
         const spawned = dependencies.spawn(
           action.command[0],
           [...action.command.slice(1), testFilename],
@@ -114,7 +114,7 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
           if (code === 0) {
             dependencies.console.log(chalk.green('  ✓ Success'));
           }
-          resolve();
+          resolve(undefined);
         });
         spawned.on('error', () => resolve);
       });

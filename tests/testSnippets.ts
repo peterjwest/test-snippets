@@ -93,12 +93,14 @@ describe('testSnippets', () => {
         type: 'html',
         pre: false,
         text: '<!-- snippet: js,ts -->',
+        raw: '<!-- snippet: js,ts -->',
       };
       const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
 
       const snippet = getTaggedSnippet(tagToken, codeToken, 'file.md');
@@ -115,12 +117,14 @@ describe('testSnippets', () => {
         type: 'html',
         pre: false,
         text: '<!--snippet :  js ,ts  , mocha-->',
+        raw: '<!--snippet :  js ,ts  , mocha-->',
       };
       const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
 
       const snippet = getTaggedSnippet(tagToken, codeToken, 'file.md');
@@ -137,10 +141,12 @@ describe('testSnippets', () => {
         type: 'html',
         pre: false,
         text: '<!-- snippet: js,ts -->',
+        raw: '<!-- snippet: js,ts -->',
       };
       const token: Token = {
         type: 'text',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
 
       const snippet = getTaggedSnippet(tagToken, token, 'file.md');
@@ -152,12 +158,14 @@ describe('testSnippets', () => {
       const token: Token = {
         type: 'text',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
       const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
 
       const snippet = getTaggedSnippet(token, codeToken, 'file.md');
@@ -170,12 +178,14 @@ describe('testSnippets', () => {
         type: 'html',
         pre: false,
         text: '<!-- Hello world -->',
+        raw: '<!-- Hello world -->',
       };
       const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
         text: 'console.log("Hello world")',
+        raw: 'console.log("Hello world")',
       };
 
       const snippet = getTaggedSnippet(tagToken, codeToken, 'file.md');
