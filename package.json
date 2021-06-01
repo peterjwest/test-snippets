@@ -1,6 +1,6 @@
 {
   "name": "test-snippets",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Flexibly test markdown code examples",
   "main": "./build/wrapper.js",
   "exports": {
