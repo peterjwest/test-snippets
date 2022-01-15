@@ -51,7 +51,7 @@
     "chalk": "^4.1.0",
     "glob": "^7.1.6",
     "lodash": "^4.17.15",
-    "marked": "^2.0.6",
+    "marked": "^4.0.10",
     "mkdirp": "^1.0.4",
     "multiline-ts": "^2.0.0",
     "spawn-process": "^1.0.4"
