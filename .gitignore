@@ -1,6 +1,5 @@
 /node_modules
-/build/es5
-/build/es6
+/build/code
 /.nyc_output
 /coverage
 /tests/snippets

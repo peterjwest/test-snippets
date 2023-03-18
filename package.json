@@ -9,7 +9,7 @@
     "require": "./build/wrapper.cjs"
   },
   "bin": {
-    "test-snippets": "./build/es5/command.cjs"
+    "test-snippets": "./build/code/command.js"
   },
   "engines": {
     "node": ">=14"
@@ -37,9 +37,7 @@
   "homepage": "https://github.com/peterjwest/test-snippets#readme",
   "scripts": {
     "audit-dependencies": "yarn audit; [[ $? -ge 4 ]] && exit 1 || exit 0",
-    "build": "yarn build:es6 && yarn build:es5",
-    "build:es6": "rm -rf build/es6 && tsc --project tsconfig-build-es6.json",
-    "build:es5": "rm -rf build/es5 && tsc --project tsconfig-build-es5.json && npx convert-extension cjs build/es5",
+    "build": "rm -rf build/code && tsup src/index.ts src/command.ts --format cjs,esm --dts --out-dir build/code",
     "lint:ts": "tslint --format verbose --project tsconfig.json",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
@@ -73,6 +71,7 @@
     "ts-node": "^9.1.1",
     "tslint": "^6.1.2",
     "tslint-eslint-rules": "^5.4.0",
+    "tsup": "^6.6.3",
     "typescript": "^4.3.2",
     "typescript-tslint-plugin": "^1.0.1",
     "vitest": "^0.29.3"
