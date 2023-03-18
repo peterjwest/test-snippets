@@ -10,12 +10,6 @@ A command to extract and run tagged examples in markdown files, and test them ag
 npm install test-snippets
 ```
 
-or
-
-```bash
-yarn add test-snippets
-```
-
 ## Usage
 
 You will need a config file, the default config file location is `tests/snippets/config.json`. This file specifies how to run the snippets.
@@ -46,12 +40,6 @@ To run the command use:
 
 ```bash
 npx test-snippets
-```
-
-or
-
-```bash
-yarn test-snippets
 ```
 
 This will look through all `.md` files in the repository (excluding anything in node_modules folders) then locally install the NPM package and run the snippets with it. By default it will use `tests/snippets` as the test directory.

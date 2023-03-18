@@ -36,12 +36,12 @@
   "license": "MIT",
   "homepage": "https://github.com/peterjwest/test-snippets#readme",
   "scripts": {
-    "audit-dependencies": "yarn audit; [[ $? -ge 4 ]] && exit 1 || exit 0",
     "build": "rm -rf build/code && tsup src/index.ts src/command.ts --format cjs,esm --dts --out-dir build/code",
     "lint:ts": "tslint --format verbose --project tsconfig.json",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "test:snippets": "ts-node src/command.ts"
+    "test:snippets": "ts-node src/command.ts",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
@@ -66,6 +66,7 @@
     "@types/node": "^15.6.1",
     "@vitest/coverage-c8": "^0.29.3",
     "convert-extension": "^0.2.0",
+    "only-allow": "^1.1.1",
     "sinon-assert-stub": "^1.0.1",
     "sinon-mocha-test": "^1.0.8",
     "ts-node": "^9.1.1",
