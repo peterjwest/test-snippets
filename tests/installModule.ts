@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import sinonTest from 'sinon-mocha-test';
 import assertStub from 'sinon-assert-stub';
 

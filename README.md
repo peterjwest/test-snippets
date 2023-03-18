@@ -9,7 +9,9 @@ A command to extract and run tagged examples in markdown files, and test them ag
 ```bash
 npm install test-snippets
 ```
+
 or
+
 ```bash
 yarn add test-snippets
 ```
@@ -23,7 +25,7 @@ Take this config file for example:
 <!-- snippet: json -->
 ```json
 {
-  "es6": { "command": ["node"], "extension": "mjs" },
+  "es6": { "command": ["node"], "extension": "js" },
   "js": { "command": ["node"], "extension": "cjs" },
   "ts": { "command": ["ts-node"], "extension": "ts" }
 }
@@ -45,7 +47,9 @@ To run the command use:
 ```bash
 npx test-snippets
 ```
+
 or
+
 ```bash
 yarn test-snippets
 ```

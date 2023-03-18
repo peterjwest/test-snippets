@@ -1,7 +1,8 @@
+import { describe, it } from 'vitest';
 const assertStub = require('sinon-assert-stub');
 const sinonTest = require('sinon-mocha-test');
 
-const testSnippets = require('../build/wrapper.js');
+const testSnippets = require('../build/wrapper.cjs');
 
 describe('testSnippets', () => {
   it('Runs all snippets correctly', sinonTest(async (sinon) => {

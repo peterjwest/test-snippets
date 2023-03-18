@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import assert from 'assert';
 
 import argvParser, { splitOnce } from '../src/argvParser';
@@ -12,7 +13,7 @@ describe('argvParser', () => {
       assert.deepStrictEqual(splitOnce('foo=bar=zim=gir', '='), ['foo', 'bar=zim=gir']);
     });
 
-    it('Returns an array with an entire not containing the delimiter ', () => {
+    it('Returns an array with an entire value not containing the delimiter ', () => {
       assert.deepStrictEqual(splitOnce('foo=bar', ' '), ['foo=bar']);
     });
   });

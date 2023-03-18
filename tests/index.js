@@ -1,7 +1,8 @@
+import { describe, it } from 'vitest';
 import assertStub from 'sinon-assert-stub';
 import sinonTest from 'sinon-mocha-test';
 
-import testSnippets, { components, dependencies } from '../build/es6/index.mjs';
+import testSnippets, { components, dependencies } from '../build/es6/index.js';
 
 describe('testSnippets', () => {
   it('Runs all snippets correctly', sinonTest(async (sinon) => {
