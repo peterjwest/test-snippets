@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Bluebird from 'bluebird';
 import { spawn } from 'child_process';
-import _ from 'lodash';
+import lodash from 'lodash';
 import mkdirp from 'mkdirp';
 import chalk from 'chalk';
 
@@ -61,7 +61,7 @@ export function getTaggedSnippet(comment: Token, code: Token, filename: string):
 
 /** Scans a list of markdown files for tagged code snippets */
 export async function getCodeTokens(files: string[]) {
-  return _.flatten(await Bluebird.map(files, async (file) => {
+  return lodash.flatten(await Bluebird.map(files, async (file) => {
     const tokens = marked.lexer((await dependencies.readFile(file)).toString());
     return (
       getPairs(tokens)

@@ -1,5 +1,5 @@
 import Bluebird from 'bluebird';
-import _ from 'lodash';
+import lodash from 'lodash';
 import glob from 'glob';
 import { promisify } from 'util';
 import multiline from 'multiline-ts';
@@ -67,7 +67,7 @@ export default async function testSnippetsCommand(argv: string[]) {
   const configPath = options.config || 'tests/snippets/config.json';
   const testDir = options['test-dir'] || 'tests/snippets';
 
-  const files = _.uniq(_.flatten(await Bluebird.mapSeries(paths, async (path) => {
+  const files = lodash.uniq(lodash.flatten(await Bluebird.mapSeries(paths, async (path) => {
     return dependencies.glob(path, { ignore: ignore });
   })));
 
