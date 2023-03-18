@@ -6,8 +6,10 @@ export interface Options {
 /** Splits a string by the first instance of a delimiter */
 export function splitOnce(value: string, delimiter: string | RegExp) {
   const match = value.match(delimiter);
-  if (!match || match.index === undefined) return [value]
-  return [value.slice(0, match.index), value.slice(match.index + 1)]
+  if (!match || match.index === undefined) {
+    return [value];
+  }
+  return [value.slice(0, match.index), value.slice(match.index + 1)];
 }
 
 /** Parses command line arguments and options from process.argv */

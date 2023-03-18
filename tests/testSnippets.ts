@@ -78,18 +78,18 @@ class MockChildProcess {
 
 describe('testSnippets', () => {
   describe('getPairs', () => {
-    it('Returns all consequitive pairs in a list', sinonTest(async (sinon) => {
+    it('Returns all consequitive pairs in a list', sinonTest(() => {
       assert.deepStrictEqual(getPairs(['a', 'b', 'c', 'd']), [['a', 'b'], ['b', 'c'], ['c', 'd']]);
     }));
 
-    it('Returns an empty list if there are less than two items', sinonTest(async (sinon) => {
+    it('Returns an empty list if there are less than two items', sinonTest(() => {
       assert.deepStrictEqual(getPairs(['a']), []);
       assert.deepStrictEqual(getPairs([]), []);
     }));
   });
 
   describe('getTaggedSnippet', () => {
-    it('Returns a snippet if there is a tag comment followed by a code block', sinonTest(async (sinon) => {
+    it('Returns a snippet if there is a tag comment followed by a code block', sinonTest(() => {
       const tagToken: Token = {
         type: 'html',
         pre: false,
@@ -113,7 +113,7 @@ describe('testSnippets', () => {
       });
     }));
 
-    it('Returns a snippet regardless of tag whitespace', sinonTest(async (sinon) => {
+    it('Returns a snippet regardless of tag whitespace', sinonTest(() => {
       const tagToken: Token = {
         type: 'html',
         pre: false,
@@ -137,7 +137,7 @@ describe('testSnippets', () => {
       });
     }));
 
-    it('Returns undefined if there is no code token', sinonTest(async (sinon) => {
+    it('Returns undefined if there is no code token', sinonTest(() => {
       const tagToken: Token = {
         type: 'html',
         pre: false,
@@ -155,7 +155,7 @@ describe('testSnippets', () => {
       assert.strictEqual(snippet, undefined);
     }));
 
-    it('Returns undefined if there is no tag token', sinonTest(async (sinon) => {
+    it('Returns undefined if there is no tag token', sinonTest(() => {
       const token: Token = {
         type: 'text',
         text: 'console.log("Hello world")',
@@ -174,7 +174,7 @@ describe('testSnippets', () => {
       assert.strictEqual(snippet, undefined);
     }));
 
-    it('Returns undefined if there is no valid tag token', sinonTest(async (sinon) => {
+    it('Returns undefined if there is no valid tag token', sinonTest(() => {
       const tagToken: Token = {
         type: 'html',
         pre: false,
@@ -247,7 +247,7 @@ describe('testSnippets', () => {
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
       const childProcess = new MockChildProcess(true, 'stdout message', 'stderr message');
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const spawn = sinon.stub(dependencies, 'spawn').returns(childProcess as any);
 
       sinon.stub(dependencies.console, 'log');
@@ -275,7 +275,7 @@ describe('testSnippets', () => {
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
       const childProcess = new MockChildProcess(true);
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const spawn = sinon.stub(dependencies, 'spawn').returns(childProcess as any);
 
       sinon.stub(dependencies.console, 'log');
@@ -303,13 +303,13 @@ describe('testSnippets', () => {
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
       const childProcess = new MockChildProcess(true, 'stdout message', 'stderr message');
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const spawn = sinon.stub(dependencies, 'spawn').returns(childProcess as any);
 
       sinon.stub(dependencies.console, 'log');
       sinon.stub(dependencies.console, 'error');
 
-      await assert.rejects(testSnippet({ js: { extension: 'js', command: ['ls', '-al'] }}, './tests/')({
+      await assert.rejects(testSnippet({ js: { extension: 'js', command: ['ls', '-al'] } }, './tests/')({
         text: '// Snippet code',
         tags: ['ts'],
         filename: 'file.md',
@@ -325,13 +325,13 @@ describe('testSnippets', () => {
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
       const childProcess = new MockChildProcess(false);
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const spawn = sinon.stub(dependencies, 'spawn').returns(childProcess as any);
 
       sinon.stub(dependencies.console, 'log');
       sinon.stub(dependencies.console, 'error');
 
-      await testSnippet({ js: { extension: 'js', command: ['ls', '-al'] }}, './tests/')({
+      await testSnippet({ js: { extension: 'js', command: ['ls', '-al'] } }, './tests/')({
         text: '// Snippet code',
         tags: ['js'],
         filename: 'file.md',

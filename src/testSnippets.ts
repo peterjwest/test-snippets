@@ -1,4 +1,4 @@
-import marked, { Token } from 'marked';
+import marked from 'marked';
 import fs from 'fs';
 import path from 'path';
 import Bluebird from 'bluebird';
@@ -49,7 +49,7 @@ export function getPairs<Type>(list: Type[]): Array<[Type, Type]> {
 }
 
 /** Gets a tagged snippet from two tokens or returns undefined */
-export function getTaggedSnippet(comment: Token, code: Token, filename: string): Snippet | undefined {
+export function getTaggedSnippet(comment: marked.Token, code: marked.Token, filename: string): Snippet | undefined {
   if (comment.type !== 'html') { return undefined; }
   if (code.type !== 'code') { return undefined; }
 
@@ -124,7 +124,7 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
 
 /** Tests code snippets from documentation */
 export default async function testSnippets(files: string[], configPath: string, testDir: string) {
-  const tagActions: TagActions = JSON.parse((await dependencies.readFile(configPath)).toString());
+  const tagActions = JSON.parse((await dependencies.readFile(configPath)).toString()) as TagActions;
   const codeTokens = await components.getCodeTokens(files);
 
   await dependencies.installModule(testDir);

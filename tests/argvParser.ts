@@ -21,27 +21,27 @@ describe('argvParser', () => {
   describe('argvParser', () => {
     it('Returns empty arguments and options when passed no additional arguments', () => {
       const input = ['command', 'file'];
-      assert.deepStrictEqual(argvParser(input), { args: [], options: {}});
+      assert.deepStrictEqual(argvParser(input), { args: [], options: {} });
     });
 
     it('Returns arguments as an array', () => {
       const input = ['command', 'file', 'foo', 'bar'];
-      assert.deepStrictEqual(argvParser(input), { args: ['foo', 'bar'], options: {}});
+      assert.deepStrictEqual(argvParser(input), { args: ['foo', 'bar'], options: {} });
     });
 
     it('Returns options as an object', () => {
       const input = ['command', 'file', '--foo', '--bar=zim'];
-      assert.deepStrictEqual(argvParser(input), { args: [], options: { foo: true, bar: 'zim' }});
+      assert.deepStrictEqual(argvParser(input), { args: [], options: { foo: true, bar: 'zim' } });
     });
 
     it('Returns short options as an object', () => {
       const input = ['command', 'file', '-f', '-b=zim'];
-      assert.deepStrictEqual(argvParser(input), { args: [], options: { f: true, b: 'zim' }});
+      assert.deepStrictEqual(argvParser(input), { args: [], options: { f: true, b: 'zim' } });
     });
 
     it('Returns options and arguments in any order/combination', () => {
       const input = ['command', 'file', '-x', 'foo', '--bar=zim', 'gir', '--zig'];
-      assert.deepStrictEqual(argvParser(input), { args: ['foo', 'gir'], options: { x: true, bar: 'zim', zig: true }});
+      assert.deepStrictEqual(argvParser(input), { args: ['foo', 'gir'], options: { x: true, bar: 'zim', zig: true } });
     });
   });
 });
