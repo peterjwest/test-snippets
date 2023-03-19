@@ -40,7 +40,7 @@
     "lint": "eslint .",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "test:snippets": "ts-node src/command.ts",
+    "test:snippets": "tsx src/command.ts",
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
@@ -73,8 +73,8 @@
     "only-allow": "^1.1.1",
     "sinon-assert-stub": "^1.2.0",
     "sinon-mocha-test": "^1.2.0",
-    "ts-node": "^10.9.1",
     "tsup": "^6.6.3",
+    "tsx": "^3.12.5",
     "typescript": "^5.0.2",
     "vitest": "^0.29.3"
   }

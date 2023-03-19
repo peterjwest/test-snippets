@@ -21,7 +21,7 @@ Take this config file for example:
 {
   "es6": { "command": ["node"], "extension": "js" },
   "js": { "command": ["node"], "extension": "cjs" },
-  "ts": { "command": ["ts-node"], "extension": "ts" }
+  "ts": { "command": ["tsx"], "extension": "ts" }
 }
 ```
 
