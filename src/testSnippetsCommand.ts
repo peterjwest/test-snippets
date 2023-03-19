@@ -1,7 +1,6 @@
 import Bluebird from 'bluebird';
 import lodash from 'lodash';
-import glob from 'glob';
-import { promisify } from 'util';
+import glob, { GlobOptionsWithFileTypesUnset } from 'glob';
 import multiline from 'multiline-ts';
 
 import testSnippets from './testSnippets';
@@ -9,7 +8,7 @@ import argvParser from './argvParser';
 
 export const dependencies = {
   console,
-  glob: promisify(glob),
+  glob: glob as (pattern: string | string[], options?: GlobOptionsWithFileTypesUnset | undefined) => Promise<string[]>,
   testSnippets,
 };
 
