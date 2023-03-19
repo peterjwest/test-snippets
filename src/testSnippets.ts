@@ -77,7 +77,7 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
     dependencies.console.log(`\nRunning snippet #${index + 1} from ${snippet.filename}:`);
     dependencies.console.log(chalk.cyan(snippet.text));
 
-    for (const tag of snippet.tags) {
+    return Bluebird.mapSeries(snippet.tags, async (tag) => {
       const action = tagActions[tag];
       if (!action) {
         throw new Error(`Unknown tag: ${tag}`);
@@ -91,7 +91,7 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
       await dependencies.mkdirp(path.dirname(testPath));
       await dependencies.writeFile(testPath, snippet.text);
 
-      await new Promise<string | undefined>((resolve) => {
+      return new Promise<boolean>((resolve) => {
         const spawned = dependencies.spawn(
           action.command[0],
           [...action.command.slice(1), testFilename],
@@ -114,11 +114,11 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
           if (code === 0) {
             dependencies.console.log(chalk.green('  ✓ Success'));
           }
-          resolve(undefined);
+          resolve(code === 0);
         });
-        spawned.on('error', () => resolve);
+        spawned.on('error', () => resolve(false));
       });
-    }
+    });
   };
 }
 
@@ -128,5 +128,5 @@ export default async function testSnippets(files: string[], configPath: string, 
   const codeTokens = await components.getCodeTokens(files);
 
   await dependencies.installModule(testDir);
-  await Bluebird.mapSeries(codeTokens, components.testSnippet(tagActions, testDir));
+  return Bluebird.mapSeries(codeTokens, components.testSnippet(tagActions, testDir));
 }

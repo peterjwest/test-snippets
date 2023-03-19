@@ -242,7 +242,7 @@ describe('testSnippets', () => {
   });
 
   describe('testSnippet', () => {
-    it('Runs a snippet correctly', sinonTest(async (sinon) => {
+    it('Resolves with true if a snippet runs correctly', sinonTest(async (sinon) => {
       const mkdirp = sinon.stub(dependencies, 'mkdirp').resolves();
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
@@ -256,12 +256,13 @@ describe('testSnippets', () => {
       const tagActions: TagActions = {
         js: { extension: 'js', command: ['ls', '-al'] },
       };
-      await testSnippet(tagActions, './tests/')({
+      const response = await testSnippet(tagActions, './tests/')({
         text: '// Snippet code',
         tags: ['js'],
         filename: 'file.md',
       }, 2);
 
+      assert.deepStrictEqual(response, [true]);
       assertStub.calledOnceWith(mkdirp, ['tests/files/js']);
       assertStub.calledOnceWith(writeFile, ['tests/files/js/3.js', '// Snippet code']);
       assertStub.calledOnceWith(spawn, [
@@ -270,7 +271,7 @@ describe('testSnippets', () => {
       ]);
     }));
 
-    it('Runs a snippet with a custom pattern', sinonTest(async (sinon) => {
+    it('Resolves with true for a snippet with a custom pattern', sinonTest(async (sinon) => {
       const mkdirp = sinon.stub(dependencies, 'mkdirp').resolves();
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
@@ -284,12 +285,13 @@ describe('testSnippets', () => {
       const tagActions: TagActions = {
         js: { extension: 'js', command: ['ls', '-al'] },
       };
-      await testSnippet(tagActions, './tests/')({
+      const response = await testSnippet(tagActions, './tests/')({
         text: '// Snippet code',
         tags: ['js'],
         filename: 'file.md',
       }, 2);
 
+      assert.deepStrictEqual(response, [true]);
       assertStub.calledOnceWith(mkdirp, ['tests/files/js']);
       assertStub.calledOnceWith(writeFile, ['tests/files/js/3.js', '// Snippet code']);
       assertStub.calledOnceWith(spawn, [
@@ -298,7 +300,7 @@ describe('testSnippets', () => {
       ]);
     }));
 
-    it('Throws an exception if the snippet has an invalid tag', sinonTest(async (sinon) => {
+    it('Rejects if the snippet has an invalid tag', sinonTest(async (sinon) => {
       const mkdirp = sinon.stub(dependencies, 'mkdirp').resolves();
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
@@ -320,7 +322,7 @@ describe('testSnippets', () => {
       assertStub.notCalled(spawn);
     }));
 
-    it('Resolves if the snippet process fails', sinonTest(async (sinon) => {
+    it('Resolves with false if a snippet process fails', sinonTest(async (sinon) => {
       const mkdirp = sinon.stub(dependencies, 'mkdirp').resolves();
       const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
 
@@ -331,12 +333,13 @@ describe('testSnippets', () => {
       sinon.stub(dependencies.console, 'log');
       sinon.stub(dependencies.console, 'error');
 
-      await testSnippet({ js: { extension: 'js', command: ['ls', '-al'] } }, './tests/')({
+      const response = await testSnippet({ js: { extension: 'js', command: ['ls', '-al'] } }, './tests/')({
         text: '// Snippet code',
         tags: ['js'],
         filename: 'file.md',
       }, 0);
 
+      assert.deepStrictEqual(response, [false]);
       assertStub.calledOnceWith(mkdirp, ['tests/files/js']);
       assertStub.calledOnceWith(writeFile, ['tests/files/js/1.js', '// Snippet code']);
       assertStub.calledOnceWith(spawn, [
@@ -371,9 +374,12 @@ describe('testSnippets', () => {
       const getCodeTokens = sinon.stub(components, 'getCodeTokens').resolves(snippets);
       const testSnippet = sinon.stub();
       sinon.stub(components, 'testSnippet').returns(testSnippet);
+      testSnippet.onCall(0).resolves([true, true]);
+      testSnippet.onCall(1).resolves([true]);
 
-      await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
+      const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
 
+      assert.deepStrictEqual(response, [[true, true], [true]]);
       assertStub.calledOnceWith(readFile, ['config.json']);
       assertStub.calledOnceWith(installModule, ['tests/']);
       assertStub.calledOnceWith(getCodeTokens, [['file.md', 'other.md']]);
@@ -383,4 +389,43 @@ describe('testSnippets', () => {
       ]);
     }));
   });
+
+  it('Runs with some snippets failing', sinonTest(async (sinon) => {
+    const tagActions: TagActions = {
+      js: { extension: 'js', command: ['cat'] },
+      ts: { extension: 'ts', command: ['ls', '-al'] },
+    };
+
+    const snippets: Snippet[] = [
+      {
+        tags: ['js', 'ts'],
+        text: 'console.log(\'Hello world\');',
+        filename: 'file.md',
+      },
+      {
+        tags: ['js'],
+        text: 'console.log(\'Goodbye world\');',
+        filename: 'file.md',
+      },
+    ];
+
+    const readFile = sinon.stub(dependencies, 'readFile').resolves(JSON.stringify(tagActions));
+    const installModule = sinon.stub(dependencies, 'installModule').resolves();
+    const getCodeTokens = sinon.stub(components, 'getCodeTokens').resolves(snippets);
+    const testSnippet = sinon.stub();
+    sinon.stub(components, 'testSnippet').returns(testSnippet);
+    testSnippet.onCall(0).resolves([false, true]);
+    testSnippet.onCall(1).resolves([false]);
+
+    const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
+
+    assert.deepStrictEqual(response, [[false, true], [false]]);
+    assertStub.calledOnceWith(readFile, ['config.json']);
+    assertStub.calledOnceWith(installModule, ['tests/']);
+    assertStub.calledOnceWith(getCodeTokens, [['file.md', 'other.md']]);
+    assertStub.calledStartingWith(testSnippet, [
+      [{ tags: ['js', 'ts'], text: 'console.log(\'Hello world\');', filename: 'file.md' }],
+      [{ tags: ['js'], text: 'console.log(\'Goodbye world\');', filename: 'file.md' }],
+    ]);
+  }));
 });

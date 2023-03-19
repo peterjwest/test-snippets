@@ -2,9 +2,14 @@ import Bluebird from 'bluebird';
 import lodash from 'lodash';
 import glob, { GlobOptionsWithFileTypesUnset } from 'glob';
 import multiline from 'multiline-ts';
+import chalk from 'chalk';
 
 import testSnippets from './testSnippets';
 import argvParser from './argvParser';
+
+function getSuccessful(results: boolean[][]) {
+  return results.filter((result) => lodash.every(result));
+}
 
 export const dependencies = {
   console,
@@ -70,5 +75,13 @@ export default async function testSnippetsCommand(argv: string[]) {
     return dependencies.glob(path, { ignore: ignore });
   })));
 
-  await dependencies.testSnippets(files, configPath, testDir);
+  const results = await dependencies.testSnippets(files, configPath, testDir);
+
+  console.log('');
+  const successful = getSuccessful(results);
+  if (successful.length === results.length) {
+    dependencies.console.log(chalk.green(`Success: ${successful.length}/${results.length} snippets passed`));
+  } else {
+    throw new Error(`Error: ${successful.length}/${results.length} snippets passed`);
+  }
 }
