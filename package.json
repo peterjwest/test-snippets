@@ -70,6 +70,7 @@
     "@vitest/coverage-c8": "^0.29.3",
     "convert-extension": "^0.3.0",
     "eslint": "^8.36.0",
+    "jsonlint": "^1.6.3",
     "only-allow": "^1.1.1",
     "sinon-assert-stub": "^1.2.0",
     "sinon-mocha-test": "^1.2.0",
