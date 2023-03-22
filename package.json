@@ -1,6 +1,6 @@
 {
   "name": "test-snippets",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Flexibly test markdown code examples",
   "type": "module",
   "main": "./build/wrapper.cjs",
