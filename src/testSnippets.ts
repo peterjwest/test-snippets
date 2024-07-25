@@ -1,10 +1,10 @@
-import { marked } from 'marked';
+import { marked, Token } from 'marked';
 import fs from 'fs';
 import path from 'path';
 import Bluebird from 'bluebird';
 import { spawn } from 'child_process';
 import lodash from 'lodash';
-import mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import chalk from 'chalk';
 
 import installModule from './installModule';
@@ -49,14 +49,14 @@ export function getPairs<Type>(list: Type[]): Array<[Type, Type]> {
 }
 
 /** Gets a tagged snippet from two tokens or returns undefined */
-export function getTaggedSnippet(comment: marked.Token, code: marked.Token, filename: string): Snippet | undefined {
+export function getTaggedSnippet(comment: Token, code: Token, filename: string): Snippet | undefined {
   if (comment.type !== 'html') { return undefined; }
   if (code.type !== 'code') { return undefined; }
 
-  const match = comment.text.trim().match(/^<!--\s*snippet\s*:\s*(.+)\s*-->$/);
+  const match = (comment.text as string).trim().match(/^<!--\s*snippet\s*:\s*(.+)\s*-->$/);
   if (!match) { return undefined; }
 
-  return { text: code.text, tags: match[1].trim().split(/\s*,\s*/), filename };
+  return { text: (code.text as string), tags: match[1].trim().split(/\s*,\s*/), filename };
 }
 
 /** Scans a list of markdown files for tagged code snippets */

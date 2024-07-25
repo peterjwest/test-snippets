@@ -2,7 +2,7 @@ import { describe, it } from 'vitest';
 import sinonTest from 'sinon-mocha-test';
 import assertStub from 'sinon-assert-stub';
 import assert from 'assert';
-import { marked } from 'marked';
+import { Token } from 'marked';
 import multiline from 'multiline-ts';
 import { Readable } from 'stream';
 
@@ -90,13 +90,13 @@ describe('testSnippets', () => {
 
   describe('getTaggedSnippet', () => {
     it('Returns a snippet if there is a tag comment followed by a code block', sinonTest(() => {
-      const tagToken: marked.Token = {
+      const tagToken: Token = {
         type: 'html',
         pre: false,
         text: '<!-- snippet: js,ts -->',
         raw: '<!-- snippet: js,ts -->',
       };
-      const codeToken: marked.Token = {
+      const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
@@ -114,13 +114,13 @@ describe('testSnippets', () => {
     }));
 
     it('Returns a snippet regardless of tag whitespace', sinonTest(() => {
-      const tagToken: marked.Token = {
+      const tagToken: Token = {
         type: 'html',
         pre: false,
         text: '<!--snippet :  js ,ts  , mocha-->',
         raw: '<!--snippet :  js ,ts  , mocha-->',
       };
-      const codeToken: marked.Token = {
+      const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
@@ -138,13 +138,13 @@ describe('testSnippets', () => {
     }));
 
     it('Returns undefined if there is no code token', sinonTest(() => {
-      const tagToken: marked.Token = {
+      const tagToken: Token = {
         type: 'html',
         pre: false,
         text: '<!-- snippet: js,ts -->',
         raw: '<!-- snippet: js,ts -->',
       };
-      const token: marked.Token = {
+      const token: Token = {
         type: 'text',
         text: 'console.log("Hello world")',
         raw: 'console.log("Hello world")',
@@ -156,12 +156,12 @@ describe('testSnippets', () => {
     }));
 
     it('Returns undefined if there is no tag token', sinonTest(() => {
-      const token: marked.Token = {
+      const token: Token = {
         type: 'text',
         text: 'console.log("Hello world")',
         raw: 'console.log("Hello world")',
       };
-      const codeToken: marked.Token = {
+      const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',
@@ -175,13 +175,13 @@ describe('testSnippets', () => {
     }));
 
     it('Returns undefined if there is no valid tag token', sinonTest(() => {
-      const tagToken: marked.Token = {
+      const tagToken: Token = {
         type: 'html',
         pre: false,
         text: '<!-- Hello world -->',
         raw: '<!-- Hello world -->',
       };
-      const codeToken: marked.Token = {
+      const codeToken: Token = {
         type: 'code',
         codeBlockStyle: 'indented',
         lang: 'js',

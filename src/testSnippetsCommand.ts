@@ -1,6 +1,6 @@
 import Bluebird from 'bluebird';
 import lodash from 'lodash';
-import glob, { GlobOptionsWithFileTypesUnset } from 'glob';
+import { glob, GlobOptionsWithFileTypesUnset } from 'glob';
 import multiline from 'multiline-ts';
 import chalk from 'chalk';
 
