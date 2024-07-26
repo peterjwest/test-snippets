@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./build/wrapper.cjs",
   "exports": {
-    "import": "./build/es6/index.js",
+    "import": "./build/code/index.js",
     "require": "./build/wrapper.cjs"
   },
   "bin": {
