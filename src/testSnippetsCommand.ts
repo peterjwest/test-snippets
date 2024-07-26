@@ -71,12 +71,13 @@ export default async function testSnippetsCommand(argv: string[]) {
   const ignore = options.ignore ? options.ignore.split(',') : ['**/node_modules/**'];
   const configPath = options.config || 'tests/snippets/config.json';
   const testDir = options['test-dir'] || 'tests/snippets';
+  const cleanup = options['cleanup'] ? (options['cleanup'] === true || options['cleanup'] === 'true') : true;
 
   const files = lodash.uniq(lodash.flatten(await Bluebird.mapSeries(paths, async (path) => {
     return dependencies.glob(path, { ignore: ignore });
   })));
 
-  const results = await dependencies.testSnippets(files, configPath, testDir);
+  const results = await dependencies.testSnippets(files, configPath, testDir, cleanup);
 
   console.log('');
   const successful = getSuccessful(results);

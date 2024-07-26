@@ -6,7 +6,7 @@ import { spawn } from 'child_process';
 import lodash from 'lodash';
 import { mkdirp } from 'mkdirp';
 
-import installModule from './installModule';
+import { installModule, cleanupFiles } from './setup';
 
 const { readFile, writeFile } = fs.promises;
 
@@ -16,6 +16,7 @@ export const dependencies = {
   readFile,
   writeFile,
   installModule,
+  cleanupFiles,
   spawn,
 };
 
@@ -124,10 +125,12 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
 }
 
 /** Tests code snippets from documentation */
-export default async function testSnippets(files: string[], configPath: string, testDir: string) {
+export default async function testSnippets(files: string[], configPath: string, testDir: string, cleanup: boolean) {
   const tagActions = JSON.parse((await dependencies.readFile(configPath)).toString()) as TagActions;
   const codeTokens = await components.getCodeTokens(files);
 
   await dependencies.installModule(testDir);
-  return Bluebird.mapSeries(codeTokens, components.testSnippet(tagActions, testDir));
+  const result = await Bluebird.mapSeries(codeTokens, components.testSnippet(tagActions, testDir));
+  if (cleanup) await dependencies.cleanupFiles(testDir);
+  return result;
 }

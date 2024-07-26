@@ -26,14 +26,16 @@ describe('testSnippets', () => {
 
     const readFile = sinon.stub(testSnippets.dependencies, 'readFile').resolves(JSON.stringify(tagActions));
     const installModule = sinon.stub(testSnippets.dependencies, 'installModule').resolves();
+    const cleanupFiles = sinon.stub(testSnippets.dependencies, 'cleanupFiles').resolves();
     const getCodeTokens = sinon.stub(testSnippets.components, 'getCodeTokens').resolves(snippets);
     const testSnippet = sinon.stub();
     sinon.stub(testSnippets.components, 'testSnippet').returns(testSnippet);
 
-    await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
+    await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/', true);
 
     assertStub.calledOnceWith(readFile, ['config.json']);
     assertStub.calledOnceWith(installModule, ['tests/']);
+    assertStub.calledOnceWith(cleanupFiles, ['tests/']);
     assertStub.calledOnceWith(getCodeTokens, [['file.md', 'other.md']]);
     assertStub.calledStartingWith(testSnippet, [
       [{ tags: ['JS', 'TS'], text: 'console.log(\'Hello world\');', filename: 'file.md' }],

@@ -60,6 +60,7 @@ describe('testSnippetsCommand', () => {
       ['file1.md', 'file2.md', 'file3.md'],
       'tests/snippets/config.json',
       'tests/snippets',
+      true,
     ]);
     assertStub.calledWith(consoleLog, [[''], [chalk.green('Success: 3/3 snippets passed')]]);
   }));
@@ -77,6 +78,7 @@ describe('testSnippetsCommand', () => {
       ['file1.md', 'file2.md', 'file3.md'],
       'tests/snippets/config.json',
       'tests/snippets',
+      true,
     ]);
     assertStub.calledWith(consoleLog, [[''], [chalk.green('Success: 3/3 snippets passed')]]);
   }));
@@ -94,6 +96,7 @@ describe('testSnippetsCommand', () => {
       ['file2.md', 'file3.md'],
       'tests/snippets/config.json',
       'tests/snippets',
+      true,
     ]);
     assertStub.calledWith(consoleLog, [[''], [chalk.green('Success: 2/2 snippets passed')]]);
   }));
@@ -104,16 +107,36 @@ describe('testSnippetsCommand', () => {
     const testSnippets = sinon.stub(dependencies, 'testSnippets');
     testSnippets.resolves([[true], [true], [true]]);
 
-    await testSnippetsCommand(['node', 'file.js', '--config=config.json', '--test-dir=spec']);
+    await testSnippetsCommand(['node', 'file.js', '--config=config.json', '--test-dir=spec', '--cleanup']);
 
     assertStub.calledOnceWith(glob, ['**/*.md', { ignore: ['**/node_modules/**'] }]);
     assertStub.calledOnceWith(testSnippets, [
       ['file1.md', 'file2.md', 'file3.md'],
       'config.json',
       'spec',
+      true,
     ]);
     assertStub.calledWith(consoleLog, [[''], [chalk.green('Success: 3/3 snippets passed')]]);
   }));
+
+  it('Runs testSnippets with cleanup disabled', sinonTest(async (sinon) => {
+    const consoleLog = sinon.stub(dependencies.console, 'log');
+    const glob = sinon.stub(dependencies, 'glob').resolves(['file1.md', 'file2.md', 'file3.md']);
+    const testSnippets = sinon.stub(dependencies, 'testSnippets');
+    testSnippets.resolves([[true], [true], [true]]);
+
+    await testSnippetsCommand(['node', 'file.js', '--cleanup=false']);
+
+    assertStub.calledOnceWith(glob, ['**/*.md', { ignore: ['**/node_modules/**'] }]);
+    assertStub.calledOnceWith(testSnippets, [
+      ['file1.md', 'file2.md', 'file3.md'],
+      'tests/snippets/config.json',
+      'tests/snippets',
+      false,
+    ]);
+    assertStub.calledWith(consoleLog, [[''], [chalk.green('Success: 3/3 snippets passed')]]);
+  }));
+
 
   it('Rejects when some testSnippets fail', sinonTest(async (sinon) => {
     const consoleLog = sinon.stub(dependencies.console, 'log');
@@ -137,6 +160,7 @@ describe('testSnippetsCommand', () => {
       ['file1.md', 'file2.md', 'file3.md'],
       'tests/snippets/config.json',
       'tests/snippets',
+      true,
     ]);
   }));
 });

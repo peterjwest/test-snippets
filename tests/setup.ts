@@ -2,10 +2,10 @@ import { describe, it } from 'vitest';
 import sinonTest from 'sinon-mocha-test';
 import assertStub from 'sinon-assert-stub';
 
-import installModule, { dependencies } from '../src/installModule';
+import { installModule, cleanupFiles, dependencies } from '../src/setup';
 
 describe('installModule', () => {
-  it('Installs the module.', sinonTest(async (sinon) => {
+  it('Installs the module', sinonTest(async (sinon) => {
     const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
     const spawnProcess = sinon.stub(dependencies, 'spawnProcess').resolves('package.tgz');
     const unlink = sinon.stub(dependencies, 'unlink').resolves();
@@ -17,6 +17,22 @@ describe('installModule', () => {
       ['npm', ['pack', '../../'], { cwd: './' }],
       ['npm', ['install', 'package.tgz', '--no-save'], { cwd: './' }],
     ]);
-    assertStub.calledOnceWith(unlink, ['package.tgz']);
+    assertStub.calledWith(unlink, [
+      ['package.tgz'],
+      ['package.json'],
+    ]);
+  }));
+});
+
+describe('cleanupFiles', () => {
+  it('Cleans up test files', sinonTest(async (sinon) => {
+    const rm = sinon.stub(dependencies, 'rm').resolves();
+
+    await cleanupFiles('./');
+
+    assertStub.calledWith(rm, [
+      ['node_modules', { recursive: true, force: true }],
+      ['files', { recursive: true, force: true }],
+    ]);
   }));
 });

@@ -4,6 +4,8 @@ Flexibly test markdown code examples.
 
 A command to extract and run tagged examples in markdown files, and test them against your NPM package.
 
+Your node package is built locally and installed in a subdirectory (by default `tests/snippets`).
+
 ## Installation
 
 ```bash
@@ -74,6 +76,16 @@ You can override the test directory:
 npx test-snippets --test-dir=test-dir/
 ```
 
+### Debugging
+
+Test artifacts will be automatically cleaned up, however, you can disable cleanup of tests with the `cleanup` option:
+
+```bash
+npx test-snippets --cleanup=false
+```
+
+This will leave the `files` and `node_modules` directories in the test directory. This can be useful when debugging failing tests, you can run the code yourself or even debug the installed node module.
+
 ### Programmatic usage
 
 Call with a list of files, a config file and a directory
@@ -82,7 +94,7 @@ Call with a list of files, a config file and a directory
 import testSnippets from 'test-snippets';
 
 (async () => {
-  await testSnippets(['file.md', 'other.md'], 'config.json', 'test-dir/');
+  await testSnippets(['file.md', 'other.md'], 'config.json', 'test-dir/', true);
 })();
 ```
 
@@ -92,7 +104,7 @@ import testSnippets from 'test-snippets';
 const testSnippets = require('test-snippets');
 
 (async () => {
-  await testSnippets(['file.md', 'other.md'], 'config.json', 'test-dir/');
+  await testSnippets(['file.md', 'other.md'], 'config.json', 'test-dir/', true);
 })();
 ```
 

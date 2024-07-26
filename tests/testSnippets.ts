@@ -31,8 +31,9 @@ class MockChildProcess {
   public stdout?: Readable;
   public stderr?: Readable;
   public isClosed = { stdout: true, stderr: true, process: false };
+  public error?: Error;
 
-  public constructor(succeeds: boolean, stdout?: string, stderr?: string) {
+  public constructor(succeeds: boolean, stdout?: string, stderr?: string, error?: Error) {
     if (stdout) {
       this.stdout = createReadable(stdout);
       this.isClosed.stdout = false;
@@ -43,6 +44,7 @@ class MockChildProcess {
     }
 
     this.succeeds = succeeds;
+    this.error = error;
   }
 
   /** Close process once if streams closed */
@@ -56,6 +58,10 @@ class MockChildProcess {
   /** Mock event handler */
   public on(event: string, callback: (value: number | Error) => void) {
     this.events[event] = callback;
+
+    if (event === 'error' && this.error) {
+      callback(this.error);
+    }
 
     if (event === 'close') {
       if (this.stdout) {
@@ -347,6 +353,32 @@ describe('testSnippets', () => {
         { cwd: './tests/', stdio: [process.stdin] },
       ]);
     }));
+
+    it('Resolves with false if a snippet command fails to spawn', sinonTest(async (sinon) => {
+      const mkdirp = sinon.stub(dependencies, 'mkdirp').resolves();
+      const writeFile = sinon.stub(dependencies, 'writeFile').resolves();
+
+      const childProcess = new MockChildProcess(false, undefined, undefined, new Error('Failed to run command'));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      const spawn = sinon.stub(dependencies, 'spawn').returns(childProcess as any);
+
+      sinon.stub(dependencies.console, 'log');
+      sinon.stub(dependencies.console, 'error');
+
+      const response = await testSnippet({ js: { extension: 'js', command: ['ls', '-al'] } }, './tests/')({
+        text: '// Snippet code',
+        tags: ['js'],
+        filename: 'file.md',
+      }, 0);
+
+      assert.deepStrictEqual(response, [false]);
+      assertStub.calledOnceWith(mkdirp, ['tests/files/js']);
+      assertStub.calledOnceWith(writeFile, ['tests/files/js/1.js', '// Snippet code']);
+      assertStub.calledOnceWith(spawn, [
+        'ls', ['-al', 'files/js/1.js'],
+        { cwd: './tests/', stdio: [process.stdin] },
+      ]);
+    }));
   });
 
   describe('testSnippets', () => {
@@ -371,17 +403,19 @@ describe('testSnippets', () => {
 
       const readFile = sinon.stub(dependencies, 'readFile').resolves(JSON.stringify(tagActions));
       const installModule = sinon.stub(dependencies, 'installModule').resolves();
+      const cleanupFiles = sinon.stub(dependencies, 'cleanupFiles').resolves();
       const getCodeTokens = sinon.stub(components, 'getCodeTokens').resolves(snippets);
       const testSnippet = sinon.stub();
       sinon.stub(components, 'testSnippet').returns(testSnippet);
       testSnippet.onCall(0).resolves([true, true]);
       testSnippet.onCall(1).resolves([true]);
 
-      const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
+      const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/', true);
 
       assert.deepStrictEqual(response, [[true, true], [true]]);
       assertStub.calledOnceWith(readFile, ['config.json']);
       assertStub.calledOnceWith(installModule, ['tests/']);
+      assertStub.calledOnceWith(cleanupFiles, ['tests/']);
       assertStub.calledOnceWith(getCodeTokens, [['file.md', 'other.md']]);
       assertStub.calledStartingWith(testSnippet, [
         [{ tags: ['js', 'ts'], text: 'console.log(\'Hello world\');', filename: 'file.md' }],
@@ -411,17 +445,19 @@ describe('testSnippets', () => {
 
     const readFile = sinon.stub(dependencies, 'readFile').resolves(JSON.stringify(tagActions));
     const installModule = sinon.stub(dependencies, 'installModule').resolves();
+    const cleanupFiles = sinon.stub(dependencies, 'cleanupFiles').resolves();
     const getCodeTokens = sinon.stub(components, 'getCodeTokens').resolves(snippets);
     const testSnippet = sinon.stub();
     sinon.stub(components, 'testSnippet').returns(testSnippet);
     testSnippet.onCall(0).resolves([false, true]);
     testSnippet.onCall(1).resolves([false]);
 
-    const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/');
+    const response = await testSnippets(['file.md', 'other.md'], 'config.json', 'tests/', true);
 
     assert.deepStrictEqual(response, [[false, true], [false]]);
     assertStub.calledOnceWith(readFile, ['config.json']);
     assertStub.calledOnceWith(installModule, ['tests/']);
+    assertStub.calledOnceWith(cleanupFiles, ['tests/']);
     assertStub.calledOnceWith(getCodeTokens, [['file.md', 'other.md']]);
     assertStub.calledStartingWith(testSnippet, [
       [{ tags: ['js', 'ts'], text: 'console.log(\'Hello world\');', filename: 'file.md' }],
