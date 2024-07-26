@@ -1,6 +1,6 @@
 {
   "json": { "command": ["npx", "jsonlint", "-q"], "extension": "json" },
-  "es6": { "command": ["node"], "extension": "mjs" },
-  "js": { "command": ["node"], "extension": "cjs" },
+  "js": { "command": ["node"], "extension": "mjs" },
+  "cjs": { "command": ["node"], "extension": "cjs" },
   "ts": { "command": ["tsx"], "extension": "ts" }
 }
