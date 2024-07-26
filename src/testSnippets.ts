@@ -118,7 +118,10 @@ export function testSnippet(tagActions: TagActions, testDir: string) {
           }
           resolve(code === 0);
         });
-        spawned.on('error', () => resolve(false));
+        spawned.on('error', (error) => {
+          dependencies.console.error(chalk.red(`  ✗ Error: ${error.message}`));
+          resolve(false);
+        });
       });
     });
   };
