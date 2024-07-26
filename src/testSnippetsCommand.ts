@@ -2,7 +2,6 @@ import Bluebird from 'bluebird';
 import lodash from 'lodash';
 import { glob, GlobOptionsWithFileTypesUnset } from 'glob';
 import multiline from 'multiline-ts';
-import chalk from 'chalk';
 
 import testSnippets from './testSnippets';
 import argvParser from './argvParser';
@@ -47,6 +46,8 @@ export const commandHelp = multiline`
 
 /** Tests snippets as a command */
 export default async function testSnippetsCommand(argv: string[]) {
+  const chalk = (await import('chalk')).default;
+
   const { args, options } = argvParser(argv);
 
   if (options.help) {

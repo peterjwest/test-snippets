@@ -5,7 +5,6 @@ import Bluebird from 'bluebird';
 import { spawn } from 'child_process';
 import lodash from 'lodash';
 import { mkdirp } from 'mkdirp';
-import chalk from 'chalk';
 
 import installModule from './installModule';
 
@@ -74,6 +73,8 @@ export async function getCodeTokens(files: string[]) {
 /** Tests a snippet with all valid actions it has been tagged with */
 export function testSnippet(tagActions: TagActions, testDir: string) {
   return async (snippet: Snippet, index: number) => {
+    const chalk = (await import('chalk')).default;
+
     dependencies.console.log(`\nRunning snippet #${index + 1} from ${snippet.filename}:`);
     dependencies.console.log(chalk.cyan(snippet.text));
 

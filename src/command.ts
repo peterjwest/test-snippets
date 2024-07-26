@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
-
 import testSnippetsCommand from './testSnippetsCommand';
 
-testSnippetsCommand(process.argv).catch((error: Error) => {
-  console.log(chalk.red(error.message));
+(async () => {
+  const chalk = (await import('chalk')).default;
+  await testSnippetsCommand(process.argv).catch((error) => {
+    console.log(chalk.red(String(error)));
+    process.exit(1);
+  });
+})().catch((error) => {
+  console.log(error);
   process.exit(1);
 });
