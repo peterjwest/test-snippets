@@ -12,7 +12,7 @@ function getSuccessful(results: boolean[][]) {
 
 export const dependencies = {
   console,
-  glob: glob as (pattern: string | string[], options?: GlobOptionsWithFileTypesUnset | undefined) => Promise<string[]>,
+  glob: glob as (pattern: string | string[], options?: GlobOptionsWithFileTypesUnset) => Promise<string[]>,
   testSnippets,
 };
 
