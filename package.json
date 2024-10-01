@@ -1,6 +1,6 @@
 {
   "name": "test-snippets",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Flexibly test markdown code examples",
   "type": "module",
   "main": "./build/code/index.js",
